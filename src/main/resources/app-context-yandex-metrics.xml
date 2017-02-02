@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="searchesShowUrlCreator"
+          class="com.yandex.metrics.SearchesShowUrlCreator">
+        <property name="version">
+            <value>v1</value>
+        </property>
+        <property name="metrics">
+            <list>
+                <value>ym:s:visits</value>
+                <value>ym:s:pageviews</value>
+            </list>
+        </property>
+        <property name="dimensions">
+            <list>
+                <value>ym:s:firstSearchPhrase</value>
+            </list>
+        </property>
+        <property name="date1">
+            <value>6daysAgo</value>
+        </property>
+        <property name="date2">
+            <value>yesterday</value>
+        </property>
+        <property name="limit">
+            <value>10000</value>
+        </property>
+        <property name="offset">
+            <value>1</value>
+        </property>
+        <property name="ids">
+            <list>
+                <value>34322390</value>
+            </list>
+        </property>
+        <property name="oauth_token">
+            <value>AQAAAAAUQvf-AAK_6er7lEvV5ka6p6cZ1oetBaU</value>
+        </property>
+    </bean>
+    <bean id="searchesShowJsonCreator"
+          class="com.yandex.metrics.SearchesShowJsonCreator"
+        c:urlCreator-ref="searchesShowUrlCreator"/>
+</beans>
