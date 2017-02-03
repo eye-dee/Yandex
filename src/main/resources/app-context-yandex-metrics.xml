@@ -43,4 +43,7 @@
     <bean id="searchesShowJsonCreator"
           class="com.yandex.metrics.SearchesShowJsonCreator"
         c:urlCreator-ref="searchesShowUrlCreator"/>
+    <bean id="clientResultGetter"
+          class="com.yandex.metrics.ClientResultGetter"
+          p:jsonCreator-ref="searchesShowJsonCreator"/>
 </beans>

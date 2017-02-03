@@ -14,7 +14,7 @@ public class SearchesShowJsonCreator implements JsonCreator {
         this.urlCreator = urlCreator;
     }
 
-    private static String readAll(Reader rd) throws IOException {
+    private String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = rd.read()) != -1) {
@@ -24,7 +24,7 @@ public class SearchesShowJsonCreator implements JsonCreator {
     }
 
     public JSONObject getJson(){
-        InputStream is;
+        InputStream is = null;
         try {
             is = new URL(urlCreator.getUrl()).openStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -36,7 +36,12 @@ public class SearchesShowJsonCreator implements JsonCreator {
         } catch (JSONException json) {
             json.printStackTrace();
         } finally {
-            //is.close();
+            try {
+                if (is != null)
+                    is.close();
+            } catch (IOException ioe){
+                ioe.printStackTrace();
+            }
         }
         return null;
     }
