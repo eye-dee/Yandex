@@ -45,4 +45,24 @@ public class SearchesShowJsonCreator implements JsonCreator {
         }
         return null;
     }
+
+    public String getStringJson(){
+        InputStream is = null;
+        try {
+            is = new URL(urlCreator.getUrl()).openStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            return jsonText;
+        } catch (IOException io){
+            io.printStackTrace();
+        } finally {
+            try {
+                if (is != null)
+                    is.close();
+            } catch (IOException ioe){
+                ioe.printStackTrace();
+            }
+        }
+        return null;
+    }
 }

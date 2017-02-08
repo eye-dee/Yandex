@@ -45,6 +45,7 @@ public class SearchesShowUrlCreator implements UrlCreator {
 
         res += "&oauth_token=" + oauth_token;
 
+        System.out.println("Result : " + res);
         return res;
     }
 

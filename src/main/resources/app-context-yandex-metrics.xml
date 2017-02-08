@@ -10,17 +10,17 @@
         </property>
         <property name="metrics">
             <list>
-                <value>ym:s:visits</value>
-                <value>ym:s:pageviews</value>
+                <value>ym:s:bounceRate</value>
+                <value>ym:s:visitsPerDay</value>
             </list>
         </property>
         <property name="dimensions">
             <list>
-                <value>ym:s:firstSearchPhrase</value>
+                <value>ym:s:startURL</value>
             </list>
         </property>
         <property name="date1">
-            <value>6daysAgo</value>
+            <value>30daysAgo</value>
         </property>
         <property name="date2">
             <value>yesterday</value>
@@ -45,5 +45,12 @@
         c:urlCreator-ref="searchesShowUrlCreator"/>
     <bean id="clientResultGetter"
           class="com.yandex.metrics.ClientResultGetter"
-          p:jsonCreator-ref="searchesShowJsonCreator"/>
+          p:jsonCreator-ref="searchesShowJsonCreator">
+        <property name="highFailureValue">
+            <value>0.5</value>
+        </property>
+        <property name="highFailureLinksAmount">
+            <value>5</value>
+        </property>
+    </bean>
 </beans>

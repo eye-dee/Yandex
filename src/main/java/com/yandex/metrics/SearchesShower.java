@@ -14,10 +14,12 @@ public class SearchesShower {
 
         ClientResultGetter clientResultGetter = (ClientResultGetter) ctx.getBean("clientResultGetter");
 
-        List<String> res = clientResultGetter.getResult("dimensions");
+        List<String> res = clientResultGetter.getResult("highFailure");
 
-        for (String i : res){
-            System.out.println(i);
+        if (res != null) {
+            for (String i : res) {
+                System.out.println(i);
+            }
         }
     }
 }
