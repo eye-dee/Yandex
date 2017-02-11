@@ -15,11 +15,5 @@ public class SearchesShower {
         ClientResultGetter clientResultGetter = (ClientResultGetter) ctx.getBean("clientResultGetter");
 
         List<String> res = clientResultGetter.getResult("highFailure");
-
-        if (res != null) {
-            for (String i : res) {
-                System.out.println(i);
-            }
-        }
     }
 }

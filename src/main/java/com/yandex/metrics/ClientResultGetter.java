@@ -30,7 +30,7 @@ public class ClientResultGetter {
         this.jsonCreator = jsonCreator;
     }
 
-    List<String> getResult(String msg){
+    public List<String> getResult(String msg){
         if ("dimensions".equals(msg)){
             JSONObject json = jsonCreator.getJson();
 
