@@ -8,16 +8,18 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClientResultGetter {
     JsonCreator jsonCreator;
     ObjectMapper objectMapper = new ObjectMapper();
-    private Double highFailureValue;
+    private Double highFailureVisits;
     private Integer highFailureLinksAmount;
 
-    public void setHighFailureValue(Double highFailureValue) {
-        this.highFailureValue = highFailureValue;
+    public void setHighFailureVisits(Double highFailureVisits) {
+        this.highFailureVisits = highFailureVisits;
     }
 
     public void setHighFailureLinksAmount(Integer highFailureLinksAmount) {
@@ -47,15 +49,13 @@ public class ClientResultGetter {
                 JsonNode node = objectMapper.readValue(jsonCreator.getStringJson(), JsonNode.class);
 
                 JsonNode header = node.get("query");
-                String metrics1 = header.get("metrics").get(0).asText(),
-                        metrics2 = header.get("metrics").get(1).asText();
                 int totalRows = node.get("total_rows").asInt();
 
                 node = node.get("data");
 
                 List<Object[]> result = new ArrayList<>();
 
-                for (int i = 0; i < totalRows; ++i){
+                for (int i = 0; i < totalRows; ++i) {
                     JsonNode metrics = node.get(i).get("metrics");/*
                     System.out.println(metrics1 + " = " + metrics.get(0).asText() +
                                     " " +
@@ -64,11 +64,16 @@ public class ClientResultGetter {
                     arr[0] = node.get(1).get("dimensions").get(0).get("name").asText();
                     arr[1] = metrics.get(0).asDouble();
                     arr[2] = metrics.get(1).asDouble();
-                    if ((Double)arr[2] > highFailureValue){
+                    if ((Double) arr[2] > highFailureVisits) {
                         result.add(arr);
                     }
                 }
-                ///result.sort(); ??
+                Collections.sort(result, new Comparator<Object[]>() {
+                    @Override
+                    public int compare(Object[] lhs, Object[] rhs) {
+                        return (Double)lhs[1] > (Double)rhs[1] ? -1 : 1;
+                    }
+                });
 
                 List<String> res = new ArrayList<>();
                 for (int i = 0; i < result.size() && i < highFailureLinksAmount; ++i){

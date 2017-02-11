@@ -11,7 +11,7 @@
         <property name="metrics">
             <list>
                 <value>ym:s:bounceRate</value>
-                <value>ym:s:visitsPerDay</value>
+                <value>ym:s:visits</value>
             </list>
         </property>
         <property name="dimensions">
@@ -46,8 +46,8 @@
     <bean id="clientResultGetter"
           class="com.yandex.metrics.ClientResultGetter"
           p:jsonCreator-ref="searchesShowJsonCreator">
-        <property name="highFailureValue">
-            <value>0.5</value>
+        <property name="highFailureVisits">
+            <value>5.0</value>
         </property>
         <property name="highFailureLinksAmount">
             <value>5</value>
