@@ -8,8 +8,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ClientResultGetter {
@@ -30,7 +28,7 @@ public class ClientResultGetter {
         this.jsonCreator = jsonCreator;
     }
 
-    public List<String> getResult(String msg){
+    public SearchPhraseYandexDirectDto getResult(String msg){
         if ("dimensions".equals(msg)){
             JSONObject json = jsonCreator.getJson();
 
@@ -40,7 +38,7 @@ public class ClientResultGetter {
                 for (int i = 0; i < arr.length(); i++) {
                     res.add(arr.getJSONObject(i).getJSONArray("dimensions").getJSONObject(0).getString("name"));
                 }
-                return res;
+                return null;
             } catch (JSONException jsone){
                 jsone.printStackTrace();
             }
@@ -53,34 +51,20 @@ public class ClientResultGetter {
 
                 node = node.get("data");
 
-                List<Object[]> result = new ArrayList<>();
+                List<SearchPhraseDto> searchPhraseDtos = new ArrayList<>();
 
                 for (int i = 0; i < totalRows; ++i) {
-                    JsonNode metrics = node.get(i).get("metrics");/*
-                    System.out.println(metrics1 + " = " + metrics.get(0).asText() +
-                                    " " +
-                                        metrics2 + " = " + metrics.get(1).asText());*/
-                    Object[] arr = new Object[3];
-                    arr[0] = node.get(1).get("dimensions").get(0).get("name").asText();
-                    arr[1] = metrics.get(0).asDouble();
-                    arr[2] = metrics.get(1).asDouble();
-                    if ((Double) arr[2] > highFailureVisits) {
-                        result.add(arr);
-                    }
-                }
-                Collections.sort(result, new Comparator<Object[]>() {
-                    @Override
-                    public int compare(Object[] lhs, Object[] rhs) {
-                        return (Double)lhs[1] > (Double)rhs[1] ? -1 : 1;
-                    }
-                });
+                    JsonNode metrics = node.get(i).get("metrics");
+                    String phrase = node.get(i).get("dimensions").get(0).get("name").asText();
 
-                List<String> res = new ArrayList<>();
-                for (int i = 0; i < result.size() && i < highFailureLinksAmount; ++i){
-                    res.add((String)((Object[])result.get(i))[0]);
+                    searchPhraseDtos.add(new SearchPhraseDto(phrase, metrics.get(0).asInt(),
+                            metrics.get(1).asDouble(),
+                            metrics.get(2).asDouble(),
+                            metrics.get(3).asDouble(),
+                            metrics.get(4).asDouble()));
                 }
 
-                return res;
+                return new SearchPhraseYandexDirectDto("searches",searchPhraseDtos,null);
             } catch (IOException ioe){
                 ioe.printStackTrace();
             }

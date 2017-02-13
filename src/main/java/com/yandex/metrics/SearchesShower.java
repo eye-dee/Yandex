@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SearchesShower {
     public static void main(String[] args) throws IOException, JSONException {
@@ -14,6 +13,6 @@ public class SearchesShower {
 
         ClientResultGetter clientResultGetter = (ClientResultGetter) ctx.getBean("clientResultGetter");
 
-        List<String> res = clientResultGetter.getResult("highFailure");
+        clientResultGetter.getResult("highFailure");
     }
 }

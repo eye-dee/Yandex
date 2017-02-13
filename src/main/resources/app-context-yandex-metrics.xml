@@ -10,13 +10,16 @@
         </property>
         <property name="metrics">
             <list>
-                <value>ym:s:bounceRate</value>
                 <value>ym:s:visits</value>
+                <value>ym:s:bounceRate</value>
+                <value>ym:s:pageDepth</value>
+                <value>ym:s:avgVisitDurationSeconds</value>
+                <value>ym:s:anyGoalConversionRate</value>
             </list>
         </property>
         <property name="dimensions">
             <list>
-                <value>ym:s:startURL</value>
+                <value>ym:s:startURLPath</value>
             </list>
         </property>
         <property name="date1">
