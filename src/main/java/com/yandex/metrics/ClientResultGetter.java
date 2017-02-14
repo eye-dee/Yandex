@@ -8,7 +8,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientResultGetter {
     JsonCreator jsonCreator;
@@ -28,7 +30,7 @@ public class ClientResultGetter {
         this.jsonCreator = jsonCreator;
     }
 
-    public SearchPhraseYandexDirectDto getResult(String msg){
+    public ResultAbstraction getResult(String msg){
         if ("dimensions".equals(msg)){
             JSONObject json = jsonCreator.getJson();
 
@@ -46,25 +48,38 @@ public class ClientResultGetter {
             try {
                 JsonNode node = objectMapper.readValue(jsonCreator.getStringJson(), JsonNode.class);
 
-                JsonNode header = node.get("query");
-                int totalRows = node.get("total_rows").asInt();
-
+                int total_rows = node.get("total_rows").asInt();
                 node = node.get("data");
 
-                List<SearchPhraseDto> searchPhraseDtos = new ArrayList<>();
+                List<HighFailureResult> highFailureResults = new ArrayList<>();
 
-                for (int i = 0; i < totalRows; ++i) {
-                    JsonNode metrics = node.get(i).get("metrics");
-                    String phrase = node.get(i).get("dimensions").get(0).get("name").asText();
+                for (int i = 0; i < total_rows; ++i){
+                    JsonNode tempNode = node.get(i);
+                    //HighFailureResult highFailureResult = objectMapper.readValue(node.get(i).toString(),HighFailureResult.class);
 
-                    searchPhraseDtos.add(new SearchPhraseDto(phrase, metrics.get(0).asInt(),
-                            metrics.get(1).asDouble(),
-                            metrics.get(2).asDouble(),
-                            metrics.get(3).asDouble(),
-                            metrics.get(4).asDouble()));
+                    HighFailureResult highFailureResult = new HighFailureResult(tempNode.get("dimensions").get(0).get("name").asText(),
+                            tempNode.get("metrics").get(0).asInt(),
+                            tempNode.get("metrics").get(1).asDouble());
+                    
+                    highFailureResults.add(highFailureResult);
                 }
 
-                return new SearchPhraseYandexDirectDto("searches",searchPhraseDtos,null);
+                highFailureResults = highFailureResults.stream().
+                        filter(highFailureResult -> (highFailureResult.getVisits() > highFailureVisits))
+                        .sorted(new Comparator<HighFailureResult>() {
+                            @Override
+                            public int compare(HighFailureResult highFailureResult, HighFailureResult t1) {
+                                return (highFailureResult.getBounceRate() > t1.getBounceRate())? -1
+                                        : (highFailureResult.getBounceRate() < t1.getBounceRate()? 1
+                                        : 0);
+                            }
+                        })
+                        .collect(Collectors.toList());
+
+                HighFailureResultDto highFailureResultDto = new HighFailureResultDto();
+                highFailureResultDto.setHighFailureResults(highFailureResults);
+
+                return highFailureResultDto;
             } catch (IOException ioe){
                 ioe.printStackTrace();
             }

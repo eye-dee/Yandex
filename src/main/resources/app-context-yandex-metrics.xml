@@ -12,9 +12,6 @@
             <list>
                 <value>ym:s:visits</value>
                 <value>ym:s:bounceRate</value>
-                <value>ym:s:pageDepth</value>
-                <value>ym:s:avgVisitDurationSeconds</value>
-                <value>ym:s:anyGoalConversionRate</value>
             </list>
         </property>
         <property name="dimensions">

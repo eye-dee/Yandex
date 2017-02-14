@@ -13,6 +13,6 @@ public class SearchesShower {
 
         ClientResultGetter clientResultGetter = (ClientResultGetter) ctx.getBean("clientResultGetter");
 
-        clientResultGetter.getResult("highFailure");
+        System.out.println(clientResultGetter.getResult("highFailure").getInformation());
     }
 }
